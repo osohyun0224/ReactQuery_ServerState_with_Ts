@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { NextPage } from "next";
-import { QueryFunctionContext, useQuery } from "react-query";
+import { QueryFunctionContext, useQueries} from "react-query";
 
 //parallel query란 여러 개의 쿼리를 다룬다.
 //query key로 배열을 사용했다는 것과 getPost의 매개변수로 query를 넣어주었음.
@@ -24,13 +24,14 @@ const getPost = async (query: QueryFunctionContext) => {
 
 
 const ParallelQueriesPage: NextPage = () => {
-  useQuery<Post, Error>(["post", 1], getPost);
-  useQuery<Post, Error>(["post", 2], getPost);
-  useQuery<Post, Error>(["post", 3], getPost);
-
+  useQueries([
+    { queryKey: ["post", 1], queryFn: getPost },
+    { queryKey: ["post", 2], queryFn: getPost },
+    { queryKey: ["post", 3], queryFn: getPost },
+  ]);
 
   return <div>Parallel Queries Page</div>;
-};
+}; 
 
 
 export default ParallelQueriesPage;
