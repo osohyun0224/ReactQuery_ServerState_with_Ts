@@ -22,7 +22,7 @@ const getPost = async (query: QueryFunctionContext) => {
   return data;
 };
 
-
+//여러 개의 쿼리를 다룰 때, 위에서 처럼 하나씩 useQuery를 호출해도 되지만, React-Query에서는 useQueries를 제공함으로써 동일한 기능을 수행이 가능함을 확인함.
 const ParallelQueriesPage: NextPage = () => {
   useQueries([
     { queryKey: ["post", 1], queryFn: getPost },
