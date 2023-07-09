@@ -4,6 +4,7 @@ import axios from "axios";
 import { Fragment } from "react";
 import Link from "next/link";
 
+
 interface Post {
   id: number;
   title: string;
@@ -11,28 +12,26 @@ interface Post {
   description: string;
 }
 
+
 const getPosts = async () => {
   const { data } = await axios.get<Post[]>("http://localhost:5000/posts");
   return data;
 };
 
 
-const InfiniteQueries: NextPage = () => {
+const InvalidateQueries: NextPage = () => {
   const {
     data: posts,
     isLoading,
     isError,
     error,
-  } = useQuery<Post[], Error>("posts", getPosts, {
-    staleTime: 5 * 1000,
-    refetchOnMount: true, 
-    refetchOnWindowFocus: true, 
-  });
+  } = useQuery<Post[], Error>("posts", getPosts);
+
 
   if (isError) {
     return <div>{error.message}</div>;
   }
-  
+
 
   return (
     <>
@@ -50,9 +49,24 @@ const InfiniteQueries: NextPage = () => {
         <Link href="/paginated">
           <a style={{ marginRight: "1rem" }}>Paginated Queries Page</a>
         </Link>
+
+
+        <Link href="/infinite">
+          <a style={{ marginRight: "1rem" }}>Infinite Queries Page</a>
+        </Link>
+
+
+        <Link href="/todos">
+          <a style={{ marginRight: "1rem" }}>Mutation Page</a>
+        </Link>
       </nav>
 
+
       <br />
+
+
+      <br />
+
 
       <div>
         {isLoading ? (
@@ -60,10 +74,16 @@ const InfiniteQueries: NextPage = () => {
         ) : (
           posts?.map((post) => (
             <Fragment key={post.id}>
-              <div>id: {post.id}</div>
-              <div>제목: {post.title}</div>
-              <div>작성자: {post.author}</div>
-              <div>내용: {post.description.slice(0, 100)}...</div>
+              <br />
+              <Link href={`/post/${post.id}`}>
+                <a>
+                  <div>id: {post.id}</div>
+                  <div>제목: {post.title}</div>
+                  <div>작성자: {post.author}</div>
+                  <div>내용: {post.description.slice(0, 100)}...</div>
+                </a>
+              </Link>
+              <br />
               <hr />
             </Fragment>
           ))
@@ -73,4 +93,5 @@ const InfiniteQueries: NextPage = () => {
   );
 };
 
-export default InfiniteQueries;
+
+export default InvalidateQueries;
