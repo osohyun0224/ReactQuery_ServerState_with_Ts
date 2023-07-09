@@ -44,12 +44,21 @@ const TodosPage: NextPage = () => {
     refetchOnWindowFocus: false,
   });
 
+// useMutation은 useQuery와는 다르게 query key를 첫 번째 인자로 갖지 않는다. 대신 첫 번째 인자로 query function이 들어간다. 
+//그리고 두 번째 인자로 옵션이 들어갑니다. 여기서는 onSuccess 메서드가 들어감.
+const { mutate } = useMutation(addTodo, {
+  onSuccess: (data) => {
+    //   queryClient.invalidateQueries("todos");
+    queryClient.setQueryData<Todo[]>("todos", (oldData) => {
+      if (!oldData) {
+        return [];
+      }
 
-  const { mutate } = useMutation(addTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("todos");
-    },
-  });
+      return [...oldData, { id: data.id, todo: data.todo, done: false }];
+    });
+  },
+});
+
 
 
   const onSubmit = useCallback(
